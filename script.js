@@ -27,6 +27,10 @@ document.body.append(divContainer);
 
 document.addEventListener("DOMContentLoaded", () => createGridPiece());
 
+button.addEventListener("click", reset);
+
+divContainer.addEventListener("mouseover", setGridPieceColor);
+
 function createGridPiece(gridSize = 16) {
   const gridPiece = document.createElement("div");
 
@@ -45,11 +49,8 @@ function createGridPiece(gridSize = 16) {
   divContainer.append(fragment);
 }
 
-button.addEventListener("click", resetButton);
 
-divContainer.addEventListener("mouseover", changeColor);
-
-function resetButton() {
+function reset() {
     let getGridSize = function() {
       let keepAsking = true;
       while (keepAsking) {
@@ -72,18 +73,49 @@ function resetButton() {
     createGridPiece(getGridSize());
 }  
 
-function changeColor(evt) {
+function setGridPieceColor(evt) {
+
   const COLOR_RANGE = 256;
   const pass = +evt.target.getAttribute("data-mousepass");
 
+  let color = pickColor();  
+  console.log(color);
+  // console.log(rainbowMode);
   if (pass === 0) {
-    const color = `rgb(${Math.random() * COLOR_RANGE}, ${Math.random() * COLOR_RANGE}, ${Math.random() * COLOR_RANGE})`;
-    evt.target.style.backgroundColor = color;
+    if (rainbowMode) {
+      color = `rgb(${Math.random() * COLOR_RANGE}, ${Math.random() * COLOR_RANGE}, ${Math.random() * COLOR_RANGE})`;
+      evt.target.style.backgroundColor = color;
+    } else {
+      evt.target.style.backgroundColor = color;
+    }
   } else if (pass > 0 && pass <= 10) {
-    let val = 100 - (pass * 10);
-    evt.target.style.filter = `brightness(${val}%)`;
+    let brightnessValue = 100 - (pass * 10);
+    evt.target.style.filter = `brightness(${brightnessValue}%)`;
   }
 
   evt.target.setAttribute("data-mousepass", `${pass+1}`);
 }
+
+function pickColor() {
+  const picker = document.querySelector("#color-picker");
+  let color = picker.value;
+  // console.log(color);
+  picker.addEventListener("input", (evt) => {
+    color = evt.target.type.value;
+  })
+  return color;
+}
+
+//rainbow function
+let rainbowMode = false;
+
+const rainbowBtn = document.querySelector("#rainbow-mode");
+rainbowBtn.addEventListener("click", toggleRainbowMode);
+
+function toggleRainbowMode(){
+  rainbowMode = !rainbowMode;
+  // console.log(rainbowMode);
+}
+
+
 
