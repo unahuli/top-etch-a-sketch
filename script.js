@@ -84,7 +84,7 @@ function setGridPieceColor(evt) {
   // const currentColor = rgbaToHex(evt.target.style.backgroundColor);
   // console.log(evt.target.style.backgroundColor);
 
-  const color = pickColor();  
+  let color = pickColor();  
   // console.log(color);
   // console.log(rainbowMode);
 
@@ -104,25 +104,31 @@ function setGridPieceColor(evt) {
 
   let pass = +evt.target.getAttribute("data-mousepass");
   // let val = 0;
-  if (pass === 0 || (currentColor !== color && (!rainbowModeEnabled))){
-    evt.target.style.backgroundColor = color;
-    evt.target.style.filter = `saturate(${100}%)`
-    evt.target.setAttribute("data-mousepass", `${pass = 0}`);
-    // evt.target.style.filter = `opacity(20%)`;
-    // let blurValue = pass * 2;
-    // evt.target.style.filter = `blur(${2}px)`;
-    // evt.target.style.filter = `drop-shadow(.5rem .5rem 10rem)`;
 
-  } else if (pass > 0 && pass <= 10) {
-    evt.target.style.backgroundColor = color;
-    let brightnessValue = 100 - (pass * 10);
-    evt.target.style.filter = `brightness(${brightnessValue}%)`;
-    let saturationValue = 100 + (pass * 15);
-    evt.target.style.filter = `saturate(${saturationValue}%)`; 
-     
-    // evt.target.setAttribute("data-mousepass", `${pass+1}`);
+  if (rainbowModeEnabled) {
+      rainbowColorGenerator();
+      evt.target.style.backgroundColor = color;
+  } else if(!rainbowModeEnabled) {
+    if (pass === 0 || (currentColor !== color && (!rainbowModeEnabled))){
+      evt.target.style.backgroundColor = color;
+      evt.target.style.filter = `saturate(${100}%)`
+      evt.target.setAttribute("data-mousepass", `${pass = 0}`);
+      // evt.target.style.filter = `opacity(20%)`;
+      // let blurValue = pass * 2;
+      // evt.target.style.filter = `blur(${2}px)`;
+      // evt.target.style.filter = `drop-shadow(.5rem .5rem 10rem)`;
+  
+    } else if (pass > 0 && pass <= 10) {
+      evt.target.style.backgroundColor = color;
+      let brightnessValue = 100 - (pass * 10);
+      evt.target.style.filter = `brightness(${brightnessValue}%)`;
+      let saturationValue = 100 + (pass * 20);
+      evt.target.style.filter = `saturate(${saturationValue}%)`; 
+       
+      // evt.target.setAttribute("data-mousepass", `${pass+1}`);
+    }
   }
-
+  
   evt.target.setAttribute("data-mousepass", `${pass+1}`);
   // if (pass === 0) {
   //   if (rainbowMode) {
