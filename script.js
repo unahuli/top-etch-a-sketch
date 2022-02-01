@@ -38,7 +38,8 @@ function createGridPiece(gridSize = 16) {
   
   gridPiece.style.flex = `1 0 ${gridPieceSize}px`;
   gridPiece.setAttribute("data-mousepass", "0");
-  console.log(gridPiece.getAttribute("data-mousepass"));
+  gridPiece.setAttribute("data-colored", "");
+  // console.log(gridPiece.getAttribute("data-mousepass"));
   gridPiece.classList.add("grid-piece");
 
 
@@ -84,7 +85,7 @@ function setGridPieceColor(evt) {
   // const currentColor = rgbaToHex(evt.target.style.backgroundColor);
   // console.log(evt.target.style.backgroundColor);
 
-  let color = pickColor();  
+  // let color = pickColor();  
   // console.log(color);
   // console.log(rainbowMode);
 
@@ -107,9 +108,21 @@ function setGridPieceColor(evt) {
 
   if (rainbowModeEnabled) {
       rainbowColorGenerator();
-      evt.target.style.backgroundColor = color;
+      // evt.target.setAttribute("data-mousepass", `${pass = 0}`);
+      let colored = evt.target.getAttribute("data-colored");
+      if(colored === "true") {
+        evt.target.setAttribute("data-mousepass", `${pass = 0}`);
+        evt.target.setAttribute("data-colored", "false");
+      }
+      if (pass === 0) {
+        evt.target.style.backgroundColor = color;
+      } else if (pass > 0 && pass <= 10) {
+        let brightnessValue = 100 - (pass * 10);
+        evt.target.style.filter = `brightness(${brightnessValue}%)`;
+      }
   } else if(!rainbowModeEnabled) {
     if (pass === 0 || (currentColor !== color && (!rainbowModeEnabled))){
+      evt.target.setAttribute("data-colored", "true");
       evt.target.style.backgroundColor = color;
       evt.target.style.filter = `saturate(${100}%)`
       evt.target.setAttribute("data-mousepass", `${pass = 0}`);
@@ -119,9 +132,6 @@ function setGridPieceColor(evt) {
       // evt.target.style.filter = `drop-shadow(.5rem .5rem 10rem)`;
   
     } else if (pass > 0 && pass <= 10) {
-      evt.target.style.backgroundColor = color;
-      let brightnessValue = 100 - (pass * 10);
-      evt.target.style.filter = `brightness(${brightnessValue}%)`;
       let saturationValue = 100 + (pass * 20);
       evt.target.style.filter = `saturate(${saturationValue}%)`; 
        
@@ -155,16 +165,19 @@ function setGridPieceColor(evt) {
   // 
 }
 
-function pickColor() {
-  const picker = document.querySelector("#color-picker");
-  let color = picker.value;
-  // console.log(color);
-  // picker.addEventListener("input", (evt) => {
-  //   color = evt.target.type.value;
-  //   rainbowMode = false;
-  // })
+// color picker
+let color = `#000000`;
+
+const picker = document.querySelector("#color-picker");
+picker.addEventListener("input", pickColor);
+
+function pickColor(evt) {
+  console.log(evt);
+  color = evt.target.value;
+  rainbowModeEnabled = false;
   return color;
 }
+
 
 //rainbow function
 let rainbowModeEnabled = false;
