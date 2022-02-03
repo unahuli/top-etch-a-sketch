@@ -99,47 +99,110 @@ function setGridPieceColor(evt) {
   // }
 
   const currentColor = rgbaToHex(window.getComputedStyle(evt.target).getPropertyValue('background-color'));
-  // console.log(currentColor);
-  // console.log(typeof currentColor);
-  // console.log(rgbaToHex(window.getComputedStyle(evt.target).getPropertyValue('background-color')));
 
-  let pass = +evt.target.getAttribute("data-mousepass");
-  // let val = 0;
 
-  if (rainbowModeEnabled) {
-      rainbowColorGenerator();
-      // evt.target.setAttribute("data-mousepass", `${pass = 0}`);
-      let colored = evt.target.getAttribute("data-colored");
-      if(colored === "true") {
-        evt.target.setAttribute("data-mousepass", `${pass = 0}`);
-        evt.target.setAttribute("data-colored", "false");
-      }
-      if (pass === 0) {
-        evt.target.style.backgroundColor = color;
-      } else if (pass > 0 && pass <= 10) {
-        let brightnessValue = 100 - (pass * 10);
-        evt.target.style.filter = `brightness(${brightnessValue}%)`;
-      }
-  } else if(!rainbowModeEnabled) {
-    if (pass === 0 || (currentColor !== color && (!rainbowModeEnabled))){
-      evt.target.setAttribute("data-colored", "true");
-      evt.target.style.backgroundColor = color;
-      evt.target.style.filter = `saturate(${100}%)`
-      evt.target.setAttribute("data-mousepass", `${pass = 0}`);
-      // evt.target.style.filter = `opacity(20%)`;
-      // let blurValue = pass * 2;
-      // evt.target.style.filter = `blur(${2}px)`;
-      // evt.target.style.filter = `drop-shadow(.5rem .5rem 10rem)`;
-  
-    } else if (pass > 0 && pass <= 10) {
-      let saturationValue = 100 + (pass * 20);
-      evt.target.style.filter = `saturate(${saturationValue}%)`; 
-       
-      // evt.target.setAttribute("data-mousepass", `${pass+1}`);
+
+  const selectFilter = function(selectedFilterMode){
+    
+    let pass = +evt.target.getAttribute("data-mousepass");
+    
+    if (selectedFilterMode === FILTER_MODES[0]) {
+      evt.target.style.filter = "none";
+      evt.target.setAttribute("data-mousepass", `${pass=0}`);
+      return;
     }
-  }
-  
+
+
+    // let filter = selectedFilterMode;
+
+    let filterValue = window.getComputedStyle(evt.target).getPropertyValue('filter');
+    console.log(filterValue);
+    let endPosition;
+    let filterName = FILTER_MODES[0];
+    if (filterValue !== FILTER_MODES[0]) {
+      endPosition = filterValue.indexOf("(");
+      filterName = filterValue.substring(0,endPosition);
+    } 
+    console.log(filterName);
+    console.log(selectedFilterMode);
+    // if (currentFilter === 'none') {
+    //   currentFilter = '';
+    // }
+
+    // if appliedFilter is not none and selected filter is not equal to the appliedFilter
+    if (
+        (filterName !== FILTER_MODES[0] && selectedFilterMode !== filterName )
+      // ||(currentColor !== "#00000000" && currentColor !== color)
+      ) {
+
+      evt.target.setAttribute("data-mousepass", `${pass=0}`);
+      evt.target.style.filter = "none";
+    }
+
+    if (pass > 0 && pass <= 10) {
+      if (selectedFilterMode === FILTER_MODES[1]) {
+        // evt.target.style.filter = `brightness(${100}%)`; 
+        increaseSaturation(pass);
+      } else if (selectedFilterMode === FILTER_MODES[2]) {
+        decreaseBrightness(pass);
+      }
+    }
+
   evt.target.setAttribute("data-mousepass", `${pass+1}`);
+
+  }
+
+  const increaseSaturation = function(pass) {
+    let saturationValue = 100 + (pass * 20);
+    evt.target.style.filter = `saturate(${saturationValue}%)`;
+  }
+
+  const decreaseBrightness = function(pass) {
+    let brightnessValue = 100 - (pass * 10);
+    // evt.target.style.filter = "none";
+    evt.target.style.filter = `brightness(${brightnessValue}%)`;
+  }
+
+  
+
+  // if (rainbowModeEnabled) {
+  //     rainbowColorGenerator();
+  //     // evt.target.setAttribute("data-mousepass", `${pass = 0}`);
+  //     let colored = evt.target.getAttribute("data-colored");
+  //     if(colored === "true") {
+  //       evt.target.setAttribute("data-mousepass", `${pass = 0}`);
+  //       evt.target.setAttribute("data-colored", "false");
+  //     }
+  //     if (pass === 0) {
+  //       evt.target.style.backgroundColor = color;
+  //     } else if (pass > 0 && pass <= 10) {
+  //       let brightnessValue = 100 - (pass * 10);
+  //       evt.target.style.filter = `brightness(${brightnessValue}%)`;
+  //     }
+  // } else if(!rainbowModeEnabled) {
+
+  //   if (pass === 0 || (currentColor !== color && (!rainbowModeEnabled))){
+  //     evt.target.setAttribute("data-colored", "true");
+  //     evt.target.style.backgroundColor = color;
+  //     evt.target.style.filter = `saturate(${100}%)`
+  //     evt.target.setAttribute("data-mousepass", `${pass = 0}`); 
+
+  //   } else if (pass > 0 && pass <= 10) {
+  //     let saturationValue = 100 + (pass * 20);
+  //     evt.target.style.filter = `saturate(${saturationValue}%)`; 
+  //   }
+  if (rainbowModeEnabled) {
+    rainbowColorGenerator();
+    evt.target.style.backgroundColor = color;
+  } else if (!rainbowModeEnabled){
+    evt.target.style.backgroundColor = color;
+  }
+
+  selectFilter(currentFilter);
+  
+  
+  
+  // evt.target.setAttribute("data-mousepass", `${pass+1}`);
   // if (pass === 0) {
   //   if (rainbowMode) {
   //     rainbowColorGenerator();
@@ -169,10 +232,10 @@ function setGridPieceColor(evt) {
 let color = `#000000`;
 
 const picker = document.querySelector("#color-picker");
-picker.addEventListener("input", pickColor);
+picker.addEventListener("change", pickColor);
 
 function pickColor(evt) {
-  console.log(evt);
+  // console.log(evt);
   color = evt.target.value;
   rainbowModeEnabled = false;
   return color;
@@ -182,7 +245,7 @@ function pickColor(evt) {
 //rainbow function
 let rainbowModeEnabled = false;
 
-const rainbowBtn = document.querySelector("#rainbow-mode");
+const rainbowBtn = document.querySelector("#rainbow-mode-btn");
 rainbowBtn.addEventListener("click", toggleRainbowMode);
 
 function toggleRainbowMode(){
@@ -200,3 +263,28 @@ const rgbaToHex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\
   (i === 3 ? Math.round(parseFloat(n) * 255) : parseFloat(n)).toString(16).padStart(2, '0').replace('NaN', '')).join('')}`;
 
   // console.log(rgbaToHex('rgb(0,0,0)'));
+
+  const FILTER_MODES = ["none", "saturate", "brightness"]; 
+
+  let currentFilter = FILTER_MODES[0];
+
+  const saturateBtn = document.querySelector("#saturation-filter-btn");
+  const darkenBtn = document.querySelector("#brightness-filter-btn");
+
+  saturateBtn.addEventListener("click", () => {
+    if (currentFilter !== FILTER_MODES[1]){
+      currentFilter = FILTER_MODES[1];
+    } else {
+      currentFilter = FILTER_MODES[0];
+    } 
+    // console.log(currentFilter);
+  });
+
+  darkenBtn.addEventListener("click", () => {
+    if (currentFilter !== FILTER_MODES[2]){
+      currentFilter = FILTER_MODES[2];
+    } else {
+      currentFilter = FILTER_MODES[0];
+    }
+    // console.log(currentFilter);
+  });
