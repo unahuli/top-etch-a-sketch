@@ -79,6 +79,7 @@ function setGridPieceColor(evt) {
 
   const COLOR_RANGE = 256;
 
+  let pass = +evt.target.getAttribute("data-mousepass");
   //rgb to hex code credits to Erick Petrucelli of StackOverflow 
   // https://stackoverflow.com/questions/1740700/how-to-get-hex-color-value-rather-than-rgb-value
   
@@ -104,11 +105,10 @@ function setGridPieceColor(evt) {
 
   const selectFilter = function(selectedFilterMode){
     
-    let pass = +evt.target.getAttribute("data-mousepass");
     
     if (selectedFilterMode === FILTER_MODES[0]) {
       evt.target.style.filter = "none";
-      evt.target.setAttribute("data-mousepass", `${pass=0}`);
+      evt.target.setAttribute("data-mousepass", `${pass=1}`);
       return;
     }
 
@@ -135,7 +135,7 @@ function setGridPieceColor(evt) {
       // ||(currentColor !== "#00000000" && currentColor !== color)
       ) {
 
-      evt.target.setAttribute("data-mousepass", `${pass=0}`);
+      evt.target.setAttribute("data-mousepass", `${pass=1}`);
       evt.target.style.filter = "none";
     }
 
@@ -191,7 +191,7 @@ function setGridPieceColor(evt) {
   //     let saturationValue = 100 + (pass * 20);
   //     evt.target.style.filter = `saturate(${saturationValue}%)`; 
   //   }
-  if (rainbowModeEnabled) {
+  if (rainbowModeEnabled && pass === 0) {
     rainbowColorGenerator();
     evt.target.style.backgroundColor = color;
   } else if (!rainbowModeEnabled){
@@ -232,7 +232,7 @@ function setGridPieceColor(evt) {
 let color = `#000000`;
 
 const picker = document.querySelector("#color-picker");
-picker.addEventListener("change", pickColor);
+picker.addEventListener("input", pickColor);
 
 function pickColor(evt) {
   // console.log(evt);
@@ -250,6 +250,7 @@ rainbowBtn.addEventListener("click", toggleRainbowMode);
 
 function toggleRainbowMode(){
   rainbowModeEnabled = !rainbowModeEnabled;
+  color = !rainbowModeEnabled ? picker.value : color;
   // console.log(rainbowMode);
 }
 
