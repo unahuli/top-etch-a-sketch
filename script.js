@@ -329,3 +329,14 @@ const rgbaToHex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\
     }
     // console.log(currentFilter);
   });
+
+
+// eraser btn function
+const eraserBtn = document.querySelector("#eraser-btn");
+eraserBtn.addEventListener("click", eraseBackgroundColor)
+
+function eraseBackgroundColor(evt) {
+    color = "transparent";
+    evt.target.style.filter = "none";
+    rainbowModeEnabled = false;
+}
