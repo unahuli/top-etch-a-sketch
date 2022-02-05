@@ -9,9 +9,15 @@
 <body>
   <input id="color-picker" type="color" value="#000000">
   <button id="rainbow-mode-btn" type="button">Rainbow Mode</button>
-  <div id="btn-group">
+  <div id="filter-container">
     <button id="saturation-filter-btn" type="button">Saturate</button>
     <button id="brightness-filter-btn" type="button">Darken</button>
   </div>
+  <div id="slider-container">
+    <input type="number" id="slide-value" name="slide-value" min="1" max="100" value="16" placeholder="1-100" step="1">
+    <input type="range" id="grid-size-slider" name="grid-size-slider" min="1" max="100" value="16" step="1">
+    <label for="grid-size-slider">Grid Size Slider</label>
+  </div>
+    
 </body>
 </html>

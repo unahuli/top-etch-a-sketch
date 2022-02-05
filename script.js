@@ -25,6 +25,38 @@ document.body.append(divContainer);
 // // Creating the grid
 // let gridSize = 16;
 
+// grid slider and input
+const slider = document.querySelector("#grid-size-slider");
+const input = document.querySelector("#slide-value");
+
+slider.addEventListener("input", (evt) => {
+  resizeGrid(evt, input);
+});
+
+input.addEventListener("change", (evt) => {
+  resizeGrid(evt, slider);
+});
+
+function resizeGrid(evt, altResizer) {
+  const eventResizer = evt.currentTarget;
+  const eventResizerValue = eventResizer.validity.valid ? eventResizer.value : 16;
+  console.log(eventResizerValue);
+  console.log(eventResizer.validity.valid);
+  const passResizeValue = (evtResizerVal, altResizer) => {
+    altResizer.value = evtResizerVal;
+  }
+  let removeGrid = function() {
+    while(divContainer.firstChild) {
+      divContainer.removeChild(divContainer.lastChild);
+    }
+  }
+  passResizeValue(eventResizerValue,altResizer);
+  removeGrid();
+  createGridPiece(eventResizerValue);
+}
+
+//
+
 document.addEventListener("DOMContentLoaded", () => createGridPiece());
 
 button.addEventListener("click", reset);
@@ -38,7 +70,7 @@ function createGridPiece(gridSize = 16) {
   
   gridPiece.style.flex = `1 0 ${gridPieceSize}px`;
   gridPiece.setAttribute("data-mousepass", "0");
-  gridPiece.setAttribute("data-colored", "");
+  // gridPiece.setAttribute("data-colored", "");
   // console.log(gridPiece.getAttribute("data-mousepass"));
   gridPiece.classList.add("grid-piece");
 
@@ -53,26 +85,33 @@ function createGridPiece(gridSize = 16) {
 
 
 function reset() {
-    let getGridSize = function() {
-      let keepAsking = true;
-      while (keepAsking) {
-        let size = +prompt("Enter grid size from 1-100: " ,16);
-        if (size < 1 || size > 100 || !Number.isInteger(size)) {
-          alert("Not Allowed");
-          return;
-        } else {
-          return size;
-        }
-      }
-    }
+    // let getGridSize = function() {
+    //   let keepAsking = true;
+    //   while (keepAsking) {
+    //     let size = +prompt("Enter grid size from 1-100: " ,16);
+    //     if (size < 1 || size > 100 || !Number.isInteger(size)) {
+    //       alert("Not Allowed");
+    //       return;
+    //     } else {
+    //       return size;
+    //     }
+    //   }
+    // }
 
-    let removeGrid = function() {
-      while(divContainer.firstChild) {
-        divContainer.removeChild(divContainer.lastChild);
-      }
-    }
-    removeGrid();
-    createGridPiece(getGridSize());
+    // let removeGrid = function() {
+    //   while(divContainer.firstChild) {
+    //     divContainer.removeChild(divContainer.lastChild);
+    //   }
+    // }
+    // removeGrid();
+    // createGridPiece(getGridSize());
+    const gridPieces = document.querySelectorAll(".grid-piece");
+    gridPieces.forEach(piece => {
+      piece.style.backgroundColor = "transparent";
+      piece.style.filter = "none";
+      piece.dataset.mousepass = "0";
+
+    })
 }  
 
 function setGridPieceColor(evt) {
@@ -115,13 +154,13 @@ function setGridPieceColor(evt) {
 
     // let filter = selectedFilterMode;
 
-    let filterValue = window.getComputedStyle(evt.target).getPropertyValue('filter');
-    console.log(filterValue);
+    let appliedFilter = window.getComputedStyle(evt.target).getPropertyValue('filter');
+    console.log(appliedFilter);
     let endPosition;
     let filterName = FILTER_MODES[0];
-    if (filterValue !== FILTER_MODES[0]) {
-      endPosition = filterValue.indexOf("(");
-      filterName = filterValue.substring(0,endPosition);
+    if (appliedFilter !== FILTER_MODES[0]) {
+      endPosition = appliedFilter.indexOf("(");
+      filterName = appliedFilter.substring(0,endPosition);
     } 
     console.log(filterName);
     console.log(selectedFilterMode);
@@ -132,10 +171,10 @@ function setGridPieceColor(evt) {
     // if appliedFilter is not none and selected filter is not equal to the appliedFilter
     if (
         (filterName !== FILTER_MODES[0] && selectedFilterMode !== filterName )
-      // ||(currentColor !== "#00000000" && currentColor !== color)
+      ||(currentColor !== "#00000000" && currentColor !== color && !rainbowModeEnabled)
       ) {
 
-      evt.target.setAttribute("data-mousepass", `${pass=1}`);
+      evt.target.setAttribute("data-mousepass", `${pass=0}`);
       evt.target.style.filter = "none";
     }
 
@@ -191,11 +230,18 @@ function setGridPieceColor(evt) {
   //     let saturationValue = 100 + (pass * 20);
   //     evt.target.style.filter = `saturate(${saturationValue}%)`; 
   //   }
-  if (rainbowModeEnabled && pass === 0) {
-    rainbowColorGenerator();
-    evt.target.style.backgroundColor = color;
+
+  // let colored = evt.target.getAttribute("data-colored");
+  // if (colored === "true") {
+  //   evt.target.setAttribute("data-colored","false"); 
+  //   evt.target.setAttribute("data-mousepass", `${pass=0}`);
+  // }
+  if (rainbowModeEnabled) {
+      rainbowColorGenerator();
+      evt.target.style.backgroundColor = color;
   } else if (!rainbowModeEnabled){
     evt.target.style.backgroundColor = color;
+    // evt.target.setAttribute("data-colored","false");
   }
 
   selectFilter(currentFilter);
@@ -253,12 +299,6 @@ function toggleRainbowMode(){
   color = !rainbowModeEnabled ? picker.value : color;
   // console.log(rainbowMode);
 }
-
-/**
-change color of the grid part
-when you pick a new color
-reset pass to 0
- */
 
 const rgbaToHex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+\.{0,1}\d*))?\)$/).slice(1).map((n, i) => 
   (i === 3 ? Math.round(parseFloat(n) * 255) : parseFloat(n)).toString(16).padStart(2, '0').replace('NaN', '')).join('')}`;
