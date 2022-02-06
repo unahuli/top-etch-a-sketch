@@ -4,23 +4,30 @@ document.body.style.flexDirection = "column";
 document.body.style.justifyContent = "center";
 document.body.style.alignItems = "center";
 
-//Creating the RESET button
-const button = document.createElement("button");
-button.type = "button";
-button.id = "reset";
-button.textContent = "Reset";
-button.style.margin = "10px";
-document.body.append(button);
-
 // Creating the div container
+const canvasContainer = document.querySelector("#canvas-container");
 const divContainer = document.createElement("div");
 divContainer.id = "grid-container";
+divContainer.style.backgroundColor = "white";
 divContainer.style.width = "600px";
 divContainer.style.height = "600px"; 
-divContainer.style.boxShadow = "0 0 20px 5px #393939";
+divContainer.style.boxShadow = "0 0 10px 3px #393939";
 divContainer.style.display = "flex";
 divContainer.style.flexWrap = "wrap";
-document.body.append(divContainer);
+const sliderContainer = document.querySelector("#slider-container");
+// console.log(sliderContainer);
+// const slide = 
+// console.log(canvasContainer.lastElementChild)
+canvasContainer.firstChild.before(divContainer);
+
+
+//Creating the RESET button
+// const button = document.createElement("button");
+// button.type = "button";
+// button.id = "reset";
+// button.textContent = "Reset";
+// button.style.margin = "10px";
+// sliderContainer.append(button);
 
 // // Creating the grid
 // let gridSize = 16;
@@ -40,8 +47,8 @@ input.addEventListener("change", (evt) => {
 function resizeGrid(evt, altResizer) {
   const eventResizer = evt.currentTarget;
   const eventResizerValue = eventResizer.validity.valid ? eventResizer.value : 16;
-  console.log(eventResizerValue);
-  console.log(eventResizer.validity.valid);
+  // console.log(eventResizerValue);
+  // console.log(eventResizer.validity.valid);
   const passResizeValue = (evtResizerVal, altResizer) => {
     altResizer.value = evtResizerVal;
   }
@@ -59,7 +66,6 @@ function resizeGrid(evt, altResizer) {
 
 document.addEventListener("DOMContentLoaded", () => createGridPiece());
 
-button.addEventListener("click", reset);
 
 divContainer.addEventListener("mouseover", setGridPieceColor);
 
@@ -83,8 +89,11 @@ function createGridPiece(gridSize = 16) {
   divContainer.append(fragment);
 }
 
+const clearBtn = document.querySelector("#clear-btn");
 
-function reset() {
+clearBtn.addEventListener("click", clearGrid);
+
+function clearGrid() {
     // let getGridSize = function() {
     //   let keepAsking = true;
     //   while (keepAsking) {
@@ -129,7 +138,7 @@ function setGridPieceColor(evt) {
   // console.log(color);
   // console.log(rainbowMode);
 
-  const rainbowColorGenerator = function() {
+  const randomColorGenerator = function() {
     color = `rgb(${Math.random() * COLOR_RANGE}, ${Math.random() * COLOR_RANGE}, ${Math.random() * COLOR_RANGE})`;
   }
 
@@ -171,7 +180,7 @@ function setGridPieceColor(evt) {
     // if appliedFilter is not none and selected filter is not equal to the appliedFilter
     if (
         (filterName !== FILTER_MODES[0] && selectedFilterMode !== filterName )
-      ||(currentColor !== "#00000000" && currentColor !== color && !rainbowModeEnabled)
+      ||(currentColor !== "#00000000" && currentColor !== color && !randomModeEnabled)
       ) {
 
       evt.target.setAttribute("data-mousepass", `${pass=0}`);
@@ -236,10 +245,10 @@ function setGridPieceColor(evt) {
   //   evt.target.setAttribute("data-colored","false"); 
   //   evt.target.setAttribute("data-mousepass", `${pass=0}`);
   // }
-  if (rainbowModeEnabled) {
-      rainbowColorGenerator();
+  if (randomModeEnabled) {
+      randomColorGenerator();
       evt.target.style.backgroundColor = color;
-  } else if (!rainbowModeEnabled){
+  } else if (!randomModeEnabled){
     evt.target.style.backgroundColor = color;
     // evt.target.setAttribute("data-colored","false");
   }
@@ -275,28 +284,28 @@ function setGridPieceColor(evt) {
 }
 
 // color picker
-let color = `#000000`;
 
 const picker = document.querySelector("#color-picker");
-picker.addEventListener("input", pickColor);
+picker.addEventListener("input", getPickerColor);
 
-function pickColor(evt) {
-  // console.log(evt);
-  color = evt.target.value;
-  rainbowModeEnabled = false;
-  return color;
+
+let color = picker.value;
+
+function getPickerColor(evt) {
+  color = evt.target ? evt.target.value : evt.value;
+  randomModeEnabled = false;
 }
 
 
 //rainbow function
-let rainbowModeEnabled = false;
+let randomModeEnabled = false;
 
-const rainbowBtn = document.querySelector("#rainbow-mode-btn");
-rainbowBtn.addEventListener("click", toggleRainbowMode);
+const randomBtn = document.querySelector("#random-mode-btn");
+randomBtn.addEventListener("click", toggleRandomMode);
 
-function toggleRainbowMode(){
-  rainbowModeEnabled = !rainbowModeEnabled;
-  color = !rainbowModeEnabled ? picker.value : color;
+function toggleRandomMode(){
+  randomModeEnabled = !randomModeEnabled;
+  color = !randomModeEnabled ? picker.value : color;
   // console.log(rainbowMode);
 }
 
@@ -338,5 +347,11 @@ eraserBtn.addEventListener("click", eraseBackgroundColor)
 function eraseBackgroundColor(evt) {
     color = "transparent";
     evt.target.style.filter = "none";
-    rainbowModeEnabled = false;
+    randomModeEnabled = false;
 }
+
+//color btn function
+const colorBtn = document.querySelector("#single-color-btn");
+colorBtn.addEventListener("click", (evt) => {
+  getPickerColor(picker);
+});

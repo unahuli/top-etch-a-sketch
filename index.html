@@ -4,24 +4,31 @@
   <title>Etch-a-Sketch</title>
   <meta charset='utf-8'>
   <link href='style.css' rel='stylesheet'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@500&display=swap" rel="stylesheet">
   <script src='script.js' defer></script>
 </head>
 <body>
-  <input id="color-picker" type="color" value="#000000">
-  <div id="color-modes-container">
-    <button id="single-color-btn" type="button">Single Color</button>
-    <button id="rainbow-mode-btn" type="button">Rainbow Mode</button>
-    <button id="eraser-btn" type="button">Eraser</button>
+  <div id="first-row-container">
+    <div id="color-modes-container">
+      <input id="color-picker" type="color" value="#C4C4C4">
+      <button id="single-color-btn" type="button">Color Mode</button>
+      <button id="random-mode-btn" type="button">Random Color Mode</button>
+      <button id="eraser-btn" type="button">Eraser</button>
+    </div>
+    <div id="filter-container">
+      <button id="saturation-filter-btn" type="button">Saturate</button>
+      <button id="brightness-filter-btn" type="button">Darken</button>
+    </div>
   </div>
-  <div id="filter-container">
-    <button id="saturation-filter-btn" type="button">Saturate</button>
-    <button id="brightness-filter-btn" type="button">Darken</button>
-  </div>
-  <div id="slider-container">
-    <input type="number" id="slide-value" name="slide-value" min="1" max="100" value="16" placeholder="1-100" step="1">
-    <input type="range" id="grid-size-slider" name="grid-size-slider" min="1" max="100" value="16" step="1">
-    <label for="grid-size-slider">Grid Size Slider</label>
-  </div>
-    
+  <div id=canvas-container>
+    <div id="slider-container">
+      <input type="number" id="slide-value" name="slide-value" min="1" max="100" value="16" placeholder="1-100" step="1">
+      <input type="range" id="grid-size-slider" name="grid-size-slider" min="1" max="100" value="16" step="1" orient="vertical">
+      <label for="grid-size-slider">Grid Size Slider</label>
+      <button id="clear-btn" type="button">Clear</button>
+    </div>
+  </div>  
 </body>
 </html>
