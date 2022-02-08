@@ -6,14 +6,17 @@
   <link href='style.css' rel='stylesheet'>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Spline+Sans:wght@500&display=swap" rel="stylesheet">
   <script src='script.js' defer></script>
 </head>
 <body>
   <div id="first-row-container">
     <div id="color-modes-container">
-      <input id="color-picker" type="color" value="#C4C4C4">
-      <button id="single-color-btn" type="button">Color Mode</button>
+      <div id="picker-container"> 
+        <input id="color-picker" type="color" value="#C4C4C4" name="color-picker">
+        <label for="color-picker">Color Picker</label>
+      </div>
+      <button id="single-color-btn" class="focused" type="button">Color Mode</button>
       <button id="random-mode-btn" type="button">Random Color Mode</button>
       <button id="eraser-btn" type="button">Eraser</button>
     </div>
@@ -24,10 +27,10 @@
   </div>
   <div id=canvas-container>
     <div id="slider-container">
+      <button id="clear-btn" type="button">Clear</button>
       <input type="number" id="slide-value" name="slide-value" min="1" max="100" value="16" placeholder="1-100" step="1">
       <input type="range" id="grid-size-slider" name="grid-size-slider" min="1" max="100" value="16" step="1" orient="vertical">
-      <label for="grid-size-slider">Grid Size Slider</label>
-      <button id="clear-btn" type="button">Clear</button>
+      <label for="grid-size-slider">Grid Slider</label>
     </div>
   </div>  
 </body>

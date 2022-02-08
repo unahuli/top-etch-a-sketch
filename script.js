@@ -1,10 +1,4 @@
-document.body.style.height = "100vh";
-document.body.style.display = "flex";
-document.body.style.flexDirection = "column";
-document.body.style.justifyContent = "center";
-document.body.style.alignItems = "center";
-
-// Creating the div container
+// Creating the div/grid container
 const canvasContainer = document.querySelector("#canvas-container");
 const divContainer = document.createElement("div");
 divContainer.id = "grid-container";
@@ -15,9 +9,6 @@ divContainer.style.boxShadow = "0 0 10px 3px #393939";
 divContainer.style.display = "flex";
 divContainer.style.flexWrap = "wrap";
 const sliderContainer = document.querySelector("#slider-container");
-// console.log(sliderContainer);
-// const slide = 
-// console.log(canvasContainer.lastElementChild)
 canvasContainer.firstChild.before(divContainer);
 
 
@@ -33,15 +24,15 @@ canvasContainer.firstChild.before(divContainer);
 // let gridSize = 16;
 
 // grid slider and input
-const slider = document.querySelector("#grid-size-slider");
-const input = document.querySelector("#slide-value");
+const gridSizeSlider = document.querySelector("#grid-size-slider");
+const gridSizeInput = document.querySelector("#slide-value");
 
-slider.addEventListener("input", (evt) => {
-  resizeGrid(evt, input);
+gridSizeSlider.addEventListener("input", (evt) => {
+  resizeGrid(evt, gridSizeInput);
 });
 
-input.addEventListener("change", (evt) => {
-  resizeGrid(evt, slider);
+gridSizeInput.addEventListener("change", (evt) => {
+  resizeGrid(evt, gridSizeSlider);
 });
 
 function resizeGrid(evt, altResizer) {
@@ -69,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => createGridPiece());
 
 divContainer.addEventListener("mouseover", setGridPieceColor);
 
-function createGridPiece(gridSize = 16) {
+function createGridPiece(gridSize = gridSizeInput.value) {
   const gridPiece = document.createElement("div");
 
   const gridPieceSize = Math.round(((divContainer.offsetHeight)/ gridSize) * 1000) / 1000;
@@ -288,12 +279,11 @@ function setGridPieceColor(evt) {
 const picker = document.querySelector("#color-picker");
 picker.addEventListener("input", getPickerColor);
 
-
 let color = picker.value;
 
 function getPickerColor(evt) {
   color = evt.target ? evt.target.value : evt.value;
-  randomModeEnabled = false;
+  // randomModeEnabled = false;
 }
 
 
@@ -301,12 +291,14 @@ function getPickerColor(evt) {
 let randomModeEnabled = false;
 
 const randomBtn = document.querySelector("#random-mode-btn");
-randomBtn.addEventListener("click", toggleRandomMode);
+randomBtn.addEventListener("click", enableRandomMode);
 
-function toggleRandomMode(){
-  randomModeEnabled = !randomModeEnabled;
-  color = !randomModeEnabled ? picker.value : color;
+function enableRandomMode(evt){
+  randomModeEnabled = true;
+  // color = !randomModeEnabled ? picker.value : color;
   // console.log(rainbowMode);
+  console.log(evt);
+  toggleFocusedClass(evt.currentTarget);
 }
 
 const rgbaToHex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+\.{0,1}\d*))?\)$/).slice(1).map((n, i) => 
@@ -321,22 +313,24 @@ const rgbaToHex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\
   const saturateBtn = document.querySelector("#saturation-filter-btn");
   const darkenBtn = document.querySelector("#brightness-filter-btn");
 
-  saturateBtn.addEventListener("click", () => {
+  saturateBtn.addEventListener("click", (evt) => {
     if (currentFilter !== FILTER_MODES[1]){
       currentFilter = FILTER_MODES[1];
     } else {
       currentFilter = FILTER_MODES[0];
     } 
     // console.log(currentFilter);
+    toggleFocusedClass(evt.currentTarget);
   });
 
-  darkenBtn.addEventListener("click", () => {
+  darkenBtn.addEventListener("click", (evt) => {
     if (currentFilter !== FILTER_MODES[2]){
       currentFilter = FILTER_MODES[2];
     } else {
       currentFilter = FILTER_MODES[0];
     }
     // console.log(currentFilter);
+    toggleFocusedClass(evt.currentTarget);
   });
 
 
@@ -348,10 +342,39 @@ function eraseBackgroundColor(evt) {
     color = "transparent";
     evt.target.style.filter = "none";
     randomModeEnabled = false;
+    toggleFocusedClass(evt.currentTarget);
 }
 
 //color btn function
 const colorBtn = document.querySelector("#single-color-btn");
 colorBtn.addEventListener("click", (evt) => {
   getPickerColor(picker);
+  randomModeEnabled = false;
+  toggleFocusedClass(evt.currentTarget);
 });
+
+//toggle focus class 
+function toggleFocusedClass(elem) {
+  // console.log(elem.parentElement.id);
+  const focusedElem = document.querySelector(`#${elem.parentElement.id} > .focused`);
+  // if (focusedElem && focusedElem.parentElement.id === elem.parentElement.id) {
+  //   console.log(`${focusedElem.parentElement.id} ${elem.parentElement.id}`);
+  //   focusedElem.classList.remove("focused");
+  // }
+  // } else if (focusedElem && focusedElem.parentElement.id === "#filter-container") {
+
+  // }
+  // if(elem.parentElement.id === "#color-modes-container") {
+  //   focusedElem.classList.remove("focused");
+  // } else if (elem.parentElement.id === "#filter-container") {
+    
+  // }
+  if (focusedElem && focusedElem !== elem) {
+    focusedElem.classList.remove("focused");
+  }
+  if (elem.parentElement.id === "filter-container") {
+    elem.classList.toggle("focused");
+  } else {
+    elem.classList.add("focused");
+  }
+}
