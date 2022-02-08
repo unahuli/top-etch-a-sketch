@@ -19,6 +19,15 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: auto;
+}
+
+h1 {
+  margin-bottom: 1em;
+  font-family: "Fredoka One";
+  font-weight: 500;
+  font-size: 3em;
+  text-shadow: 4px 4px 4px #f5f1ef;
 }
 
 #first-row-container {
@@ -27,8 +36,6 @@ body {
   align-items: center;
   margin-bottom: 15px;
   gap: 25px;
-  position: relative;
-  right: 60px;
 }
 
 #color-modes-container {
@@ -61,6 +68,7 @@ body {
 /* canvas */
 #canvas-container {
   display: flex;
+  margin-left: 5vw;
 }
 
 #slider-container {
@@ -119,3 +127,7 @@ button:hover {
 button:active {
   transform: translateY(3px);
 }
+
+/* footer {
+  padding :50px;
+} */
