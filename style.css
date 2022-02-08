@@ -69,6 +69,7 @@ h1 {
 #canvas-container {
   display: flex;
   margin-left: 5vw;
+  gap: 3%;
 }
 
 #slider-container {
