@@ -1,0 +1,17 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+}
+
+.grid-container {
+    width: 600px;
+    height: 600px;
+    background-color: yellow;
+
+    display: flex;
+    flex-wrap: wrap;
+}
