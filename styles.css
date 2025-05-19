@@ -15,4 +15,6 @@ body {
 
     display: flex;
     flex-wrap: wrap;
+
+    border: solid black 1px;
 }
